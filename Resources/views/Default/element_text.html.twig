@@ -1,16 +1,53 @@
-<form class="form-inline editable-wrap editable-text hide">
+<form class="editable-wrap editable-text">
     <div class="form-group">
-        <input value="{{ item.data }}" type="text" class="value-element form-control">
-        <span class="editable-buttons">
-            <button data-type="text" data-path="{{ path_update }}" data-site="{{ site }}" data-schema-name="{{ key }}" class="btn-submit btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
+        <label for="{{ loop.index }}" class="col-form-label col-form-label-sm">{{ item.schema.name }}</label><br/>
+        <div class="form-row align-items-center">
+            <div class="col-sm-4">
+            <input id="input-{{ loop.index }}" data-key="{{ key }}" value="{% if item.data is not empty %}{{ item.data }}{% elseif item.schema.default is not empty %}{{ item.schema.default }}{% endif %}"
+               data-default="{{ item.schema.default }}" type="text" class="value-element form-control sm-2" disabled>
+            </div>
+            <div id='buttons-{{ loop.index }}' class="col-auto hide">
+              <button data-type="text" data-path="{{ path_update }}" data-site="{{ site }}" data-schema-name="{{ key }}" data-action="save"
+                      class="btn-submit btn btn-success" data-input-id="{{ loop.index }}">
+                  <i class="fas fa-save"></i>
+              </button>
+              <button type="button" class="btn btn-danger" data-action="remove" data-input-id="{{ loop.index }}">
+                <i class="fas fa-trash"></i>
+              </button>
+              <button type="button" class="btn btn-cancel btn-warning" data-input-id="{{ loop.index }}">
+                  <i class="fas fa-times"></i>
+              </button>
+            </div>
+          <div id='edit-button-{{ loop.index }}' class="col-auto">
+            <button class="show-form-edit btn btn-primary" id="button-edit-{{ loop.index }}" data-input-id="{{ loop.index }}">
+                edit
             </button>
-            <button type="button" class="btn-cancel btn btn-default">
-                <span class="glyphicon glyphicon-remove"></span>
-            </button>
-        </span>
-        <div class="error-message help-block">
-            <span></span>
+          </div>
         </div>
-    </div>
+      <div class="form-group">
+        {% if item.row.updatedAt is defined and item.row.updatedAt is not empty %}
+        <small class="form-text text-muted">
+          Default: {{ item.schema.default }}
+        </small>
+        {% endif %}
+        {#
+        {% if (item.row.updatedAt is defined and item.row.updatedAt is not empty) or  item.schema.default is not empty %}
+
+          <small id="emailHelp" class="form-text text-muted">
+            <ul>
+              {% if item.row.updatedAt is defined and item.row.updatedAt is not empty %}
+              <li>Update by: {{ item.row.updatedBy }} at {{ item.row.updatedAt }} </li>
+              {% endif %}
+              {% if item.row.updatedAt is defined and item.row.updatedAt is not empty %}
+              <li>Default: {{ item.schema.default }}</li>
+              {% endif %}
+            </ul>
+          </small>
+        #}
+        <div class="error-message help-block">
+        <span></span>
+        </div>
+        <span class="badge badge-success hide">Value updated !</span>
+
+      </div>
 </form>

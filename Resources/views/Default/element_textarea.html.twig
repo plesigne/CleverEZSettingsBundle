@@ -3,10 +3,10 @@
         <textarea class="form-control value-element rounded-0" cols="{{ item.schema.form.options.cols }}" rows="{{ item.schema.form.options.rows  }}"></textarea>
         <span class="editable-buttons">
             <button data-type="textarea" data-path="{{ path_update }}" data-site="{{ site }}" data-schema-name="{{ key }}" class="btn-submit btn btn-primary">
-                <span class="glyphicon glyphicon-ok"></span>
+                <i class="fas fa-check"></i>
             </button>
-            <button type="button" class="btn-cancel btn btn-default">
-                <span class="glyphicon glyphicon-remove"></span>
+            <button type="button" class="btn-cancel btn btn-danger">
+                    <i class="fas fa-times"></i>
             </button>
         </span>
         <div class="error-message help-block">

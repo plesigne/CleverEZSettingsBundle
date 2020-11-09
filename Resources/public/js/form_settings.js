@@ -1,64 +1,75 @@
-jQuery(function($) {
+jQuery(function ($) {
+
+    function toggleForm(groupId, switchInfo) {
+        var input = $("#input-" + groupId);
+        if (switchInfo == true) {
+            input.prop("disabled", false);
+            input.focus();
+        } else {
+            input.prop("disabled", "disabled");
+        }
+
+        var buttons_group = $("#buttons-" + groupId);
+        if (switchInfo == true) {
+            buttons_group.show();
+            $("#button-edit-" + groupId).hide();
+        } else {
+            buttons_group.hide();
+            $("#button-edit-" + groupId).show();
+        }
+    }
+
     //Hide element if it's not selected tab
-    $("a.list-group-item").click(function () {
+    $("a.settings-group-item").click(function () {
         $(".tab-pane").addClass("hide");
 
         var tab = $(this).attr('id');
-        $("#"+ tab+ ".tab-pane").removeClass("hide");
-        $('html').animate({scrollTop:0}, 'fast');
+        $("#" + tab + ".tab-pane").removeClass("hide");
+        $('html').animate({scrollTop: 0}, 'fast');
     });
 
     //Show element on click Edit TextArea, Text
     $(".show-form-edit").click(function () {
-        $(this).prev('form.editable-text').removeClass('hide');
-        $(this).addClass('hide');
+        event.preventDefault();
+        toggleForm($(this).data('input-id'), true)
     });
 
     //Hide element on cancel
     $('button.btn-cancel').click(function () {
-        var container = $(this).parents('.element-setting');
-        container.children('.show-form-edit').removeClass('hide');
-        container.children('form.editable-text').addClass('hide');
+        /*var container = $(this).parents('.element-setting');*/
+        toggleForm($(this).data('input-id'), false);
+
+        //container.children('form.editable-text').addClass('hide');
     });
 
-    $('button.btn-submit, button.btn-remove').click(function (event) {
+    $('button.btn-submit, button.btn-danger').click(function (event) {
         event.preventDefault();
 
-        var type_element = $(this).attr("data-type");
-        var container = $(this).parents('.element-setting');
-        if (type_element === 'remove')
-        {
-            value = '';
+        var groupId = $(this).data('input-id');
+        var action = $(this).data('action');
+        var input = $("#input-" + groupId);
+        var container = $(this).parents('form');
+        if (action === 'remove') {
+            input.val(input.data('default'));
         }
-        else {
-            var value = $(this).parents('.form-group').children('.value-element').val();
-        }
+        value = $("#input-" + groupId).val();
 
         var data = {};
         data['siteaccess'] = $(this).attr("data-site");
         data['schema_name'] = $(this).attr("data-schema-name");
         data['path_update'] = $(this).attr("data-path");
-        data['type_element'] = type_element;
+        data['type_element'] = action;
         data['value'] = value;
-
+        
         jQuery.ajax({
             url: data['path_update'],
             type: "POST",
             data: data,
             success: function (data) {
                 if (data['success'] === true) {
-                    container.children('span.current_value').html(value);
-                    if (type_element === 'remove')
-                    {
-                        container.children('.btn-remove').addClass('hide');
-                    }
-                    else
-                    {
-                        container.children('.show-form-edit').removeClass('hide');
-                        container.children('form.editable-text').addClass('hide');
-                    }
-                }
-                else {
+                    toggleForm(groupId, false);
+                    container.find('span.badge-success').show().delay(2000).fadeOut();
+                } else {
                     var error = data['error'];
                     container.find('div.error-message').children('span').html(error);
                 }
@@ -70,7 +81,7 @@ jQuery(function($) {
 
 
 // Use browse tab for select element
-(function(global, doc, eZ, React, ReactDOM, jQuery) {
+(function (global, doc, eZ, React, ReactDOM, jQuery) {
     const btns = document.querySelectorAll('.btn--open-udw');
     const udwContainer = document.getElementById('react-udw');
     const token = document.querySelector('meta[name="CSRF-Token"]').content;
@@ -80,7 +91,7 @@ jQuery(function($) {
 
         var identifier_replace = data['replace_value_id'];
         data["value"] = content[0].id;
-        
+
         var name = content[0]['ContentInfo']['Content']['Name'];
 
         jQuery.ajax({
@@ -94,8 +105,7 @@ jQuery(function($) {
                         element.html(name);
                         element.siblings('.btn-remove').removeClass('hide');
                     }
-                }
-                else {
+                } else {
                     var error = data['error'];
                     jQuery('span[class*="' + identifier_replace + '"]').siblings('.error-message ').children('span').html(error);
                 }

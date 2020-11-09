@@ -40,11 +40,14 @@ class SiteaccessType extends AbstractType
             ->setMethod('POST')
             ->add('siteaccess', ChoiceType::class, [
                 'label' => 'Merci de sélectionner un site pour accéder à la configuration',
+                'label_attr' => [
+                    'class' => 'col-sm col-form-label'
+                ],
                 'placeholder' => 'Listes des sites',
                 'required' => true,
                 'choices' => array_flip($options['siteaccess_list']),
                 'attr' => [
-                    'class' => ''
+                    'class' => 'form-control'
                 ]
             ])
         ;
