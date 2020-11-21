@@ -31,7 +31,9 @@ jQuery(function ($) {
     //Show element on click Edit TextArea, Text
     $(".show-form-edit").click(function () {
         event.preventDefault();
-        toggleForm($(this).data('input-id'), true)
+        if (typeof $(this).data('input-id') != "undefined") {
+            toggleForm($(this).data('input-id'), true);
+        }
     });
 
     //Hide element on cancel
@@ -58,9 +60,11 @@ jQuery(function ($) {
         data['siteaccess'] = $(this).attr("data-site");
         data['schema_name'] = $(this).attr("data-schema-name");
         data['path_update'] = $(this).attr("data-path");
+        data['input_id'] = $(this).attr("data-input-id");
         data['type_element'] = action;
         data['value'] = value;
-        
+
+        //@todo remove displayed value from browse form
         jQuery.ajax({
             url: data['path_update'],
             type: "POST",
@@ -76,7 +80,6 @@ jQuery(function ($) {
             }
         });
     });
-
 });
 
 
@@ -88,22 +91,24 @@ jQuery(function ($) {
     const siteaccess = document.querySelector('meta[name="SiteAccess"]').content;
     const closeUDW = () => ReactDOM.unmountComponentAtNode(udwContainer);
     const onConfirm = (data, content) => {
-
         var identifier_replace = data['replace_value_id'];
         data["value"] = content[0].id;
-
+        data["type_form"] = "browse";
+        var input_id = data['input_id'];
         var name = content[0]['ContentInfo']['Content']['Name'];
-
         jQuery.ajax({
             url: data['path_update'],
             type: "POST",
             data: data,
             success: function (data) {
+                console.log('update');
                 if (data['success'] === true) {
                     if (name.length > 0) {
-                        var element = jQuery('span[class*="' + identifier_replace + '"]');
-                        element.html(name);
-                        element.siblings('.btn-remove').removeClass('hide');
+                        console.log(input_id);
+                        var element = jQuery('#browse-value-'+input_id);
+                        console.log(element);
+                        element.html('<a href="'+data.result.url+'" target="_blank">'+data.result.name+'</a>');
+                        //element.siblings('.btn-remove').removeClass('hide');
                     }
                 } else {
                     var error = data['error'];
@@ -123,6 +128,7 @@ jQuery(function ($) {
         data['path_update'] = event.srcElement.getAttribute("data-path");
         data['type_element'] = event.srcElement.getAttribute("data-type");
         data['replace_value_id'] = event.srcElement.getAttribute("data-replace-value-id");
+        data['input_id'] = event.srcElement.getAttribute("data-input-id");
 
         var config = JSON.parse(udwContainer.getAttribute('data-filter-subtree-udw-config'));
         var startingLocationId = event.srcElement.getAttribute("data-start-location-id");

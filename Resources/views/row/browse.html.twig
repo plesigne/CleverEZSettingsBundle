@@ -1,0 +1,60 @@
+<form class="editable-wrap editable-text">
+  <div class="form-group">
+    <label for="{{ loop.index }}" class="col-form-label col-form-label-sm">{{ item.schema.name }}</label><br/>
+    <div class="form-row align-items-center">
+      <div class="col-sm-4" id="browse-value-{{ loop.index }}">
+        {% if item.data is not empty %}
+          <a href="{{ path('ez_urlalias', {location: item.data}) }}" target="_blank">{{ item.data.content.name }}</a>
+        {% endif %}
+      </div>
+      hu
+      <button data-replace-value-id="{{ site }}_{{ key }}" data-type-form="browse" data-path="{{ path_update }}"
+              data-site="{{ site }}" data-schema-name="{{ key }}"
+              data-start-location-id="{{ item.schema.form.options.startLocationId }}" data-input-id="{{ loop.index }}"
+              class="show-form-edit btn btn-primary btn--open-udw">
+        edit
+      </button>
+      {% set remove_class = 'hide' %}
+      {% if item.data != "" %}
+        {% set remove_class = '' %}
+      {% endif %}
+      <button data-replace-value-id="{{ site }}_{{ key }}" data-action="remove" data-path="{{ path_update }}"
+              data-site="{{ site }}" data-schema-name="{{ key }}"
+              data-start-location-id="{{ item.schema.form.options.startLocationId }}"
+              class="{{ remove_class }} btn-remove btn btn-danger">
+        remove
+      </button>
+    </div>
+    {% include '@MasevSettings/partials/row-informations.html.twig' %}
+  </div>
+</form>
+{#
+
+<form class="editable-wrap editable-text">
+  <div class="element-setting">
+    <label for="{{ key }}" style="white-space: initial">{{ item.schema.name }} :</label><br/>
+    <span class="current_value {{ site }}_{{ key }}" id="{{ key }}">
+        {% if item.data == "" and item.schema.default is not empty %}{{ "Empty value : "~item.schema.default }}{% else %}{{ item.data }}{% endif %}
+    </span>
+    <button data-replace-value-id="{{ site }}_{{ key }}" data-type="browse" data-path="{{ path_update }}"
+            data-site="{{ site }}" data-schema-name="{{ key }}"
+            data-start-location-id="{{ item.schema.form.options.startLocationId }}"
+            class="show-form-edit btn btn-primary btn--open-udw">
+      edit
+    </button>
+    {% set remove_class = 'hide' %}
+    {% if item.data != "" %}
+      {% set remove_class = '' %}
+    {% endif %}
+    <button data-replace-value-id="{{ site }}_{{ key }}" data-type="remove" data-path="{{ path_update }}"
+            data-site="{{ site }}" data-schema-name="{{ key }}"
+            data-start-location-id="{{ item.schema.form.options.startLocationId }}"
+            class="{{ remove_class }} btn-remove btn btn-danger">
+      remove
+    </button>
+    {% include '@MasevSettings/partials/row-informations.html.twig' %}
+    <div class="error-message help-block">
+      <span></span>
+    </div>
+  </div>
+</form>#}

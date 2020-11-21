@@ -54,7 +54,6 @@ class MysqlParametersStorage implements ParametersStorageInterface
     public function set($key, $value, $user, $scope = 'default')
     {
         $currentDate = new \DateTime();
-
         $statement = $this->db->prepare("REPLACE INTO `masev_settings` (identifier, value, scope, updatedAt, updatedBy) VALUES (:identifier, :value, :scope, :updatedAt, :updatedBy)");
         $statement->bindValue(":identifier", $key);
         $statement->bindValue(":value", $value);
@@ -72,8 +71,8 @@ class MysqlParametersStorage implements ParametersStorageInterface
         $statement = $this->db->prepare("DELETE FROM `masev_settings` WHERE `identifier`=:identifier AND `scope`=:scope");
         $statement->bindValue(":identifier", $key);
         $statement->bindValue(":scope", $scope);
-        $statement->bindValue(":updatedAt", $currentDate->format('Y-m-d H:i:s'));
-        $statement->bindValue(":updatedBy", $user);
+/*        $statement->bindValue(":updatedAt", $currentDate->format('Y-m-d H:i:s'));
+        $statement->bindValue(":updatedBy", $user);*/
 
         return $statement->execute();
     }

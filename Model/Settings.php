@@ -128,7 +128,8 @@ class Settings implements ContainerAwareInterface
                 if ($param['form']['type'] == 'browseLocation' && $value != "") {
                     try {
                         $location = $this->repository->getLocationService()->loadLocation($value);
-                        $value = $location->contentInfo->name;
+                        dump($location);
+                        $value = $location;
                     } catch (\Exception $e) {
                         $value = "";
                     }
