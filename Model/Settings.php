@@ -120,7 +120,6 @@ class Settings implements ContainerAwareInterface
         foreach ($this->schema as $param) {
             if (!is_null($scope)) {
                 $result = $this->parametersStorage->get($param['key'], $scope) == false ? "" : $this->parametersStorage->get($param['key'], $scope);
-                dump($result);
                 $value = "";
                 if (!empty($result['value'])) {
                     $value = $result['value'];
@@ -128,7 +127,6 @@ class Settings implements ContainerAwareInterface
                 if ($param['form']['type'] == 'browseLocation' && $value != "") {
                     try {
                         $location = $this->repository->getLocationService()->loadLocation($value);
-                        dump($location);
                         $value = $location;
                     } catch (\Exception $e) {
                         $value = "";

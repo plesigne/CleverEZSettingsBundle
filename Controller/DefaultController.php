@@ -110,7 +110,6 @@ class DefaultController extends BaseController
           'typeForm' => $typeForm
         ]);
 
-        dump($data);
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
