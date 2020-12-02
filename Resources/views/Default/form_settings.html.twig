@@ -19,21 +19,6 @@
         </li>
       {% endfor %}
     {% endfor %}
-    {# <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Catégories</h3>
-            </div>
-            {% for level1, level2_sections in sections %}
-                <div class="">
-                    <div class="categorie">{{ level1|capitalize|replace({'_' : ' ' }) }}</div>
-                    <div class="list-group" style="margin-left: 0">
-                        {% for level2, value in level2_sections %}
-                            <a class="list-group-item" id="{{ "tab_"~level1~"_"~level2 }}">{{ level2|capitalize|replace({'_' : ' ' }) }} <span class="glyphicon glyphicon-chevron-right"></span></a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div> #}
   </ul>
 
   <!-- Tab panes -->
@@ -50,6 +35,8 @@
                 {% include '@MasevSettings/row/text.html.twig' with {'item' : item, 'path_update' : path_update, 'site' : site, 'key' : key } %}
               {% elseif item.schema.form.type == "textarea" %}
                 {% include '@MasevSettings/row/textarea.html.twig' with {'item' : item, 'path_update' : path_update, 'site' : site, 'key' : key } %}
+              {% elseif item.schema.form.type == "boolean" %}
+                {% include '@MasevSettings/row/bool.html.twig' with {'item' : item, 'path_update' : path_update, 'site' : site, 'key' : key } %}
               {% elseif item.schema.form.type == "browseLocation" %}
                 {% include '@MasevSettings/row/browse.html.twig' with {'item' : item, 'path_update' : path_update, 'site' : site, 'key' : key } %}
               {% endif %}

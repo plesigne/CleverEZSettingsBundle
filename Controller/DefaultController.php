@@ -99,15 +99,15 @@ class DefaultController extends BaseController
             $error = $e->getMessage();
             $success = false;
         }
-        dump($typeForm);
-        if ($typeForm == "browse") {
+        if ($typeForm == "browse" && !empty($value)) {
             $location = $this->get('ezpublish.api.service.location')->loadLocation((int) $value);
             $value = ['url' => $this->generateUrl('ez_urlalias', ['location' => $location]), 'name' => $location->getContent()->getName()];
         }
         $data = json_encode([
           'error' => $error,
           'result' => $value,
-          'success' => $success
+          'success' => $success,
+          'typeForm' => $typeForm
         ]);
 
         dump($data);

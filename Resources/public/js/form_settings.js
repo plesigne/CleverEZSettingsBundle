@@ -1,5 +1,4 @@
 jQuery(function ($) {
-
     function toggleForm(groupId, switchInfo) {
         var input = $("#input-" + groupId);
         if (switchInfo == true) {
@@ -51,6 +50,7 @@ jQuery(function ($) {
         var action = $(this).data('action');
         var input = $("#input-" + groupId);
         var container = $(this).parents('form');
+
         if (action === 'remove') {
             input.val(input.data('default'));
         }
@@ -61,8 +61,10 @@ jQuery(function ($) {
         data['schema_name'] = $(this).attr("data-schema-name");
         data['path_update'] = $(this).attr("data-path");
         data['input_id'] = $(this).attr("data-input-id");
-        data['type_element'] = action;
+        data['type_element'] = $(this).attr("type-element");
+        data['type_form'] = $(this).data("field-type");
         data['value'] = value;
+
 
         //@todo remove displayed value from browse form
         jQuery.ajax({
@@ -72,6 +74,10 @@ jQuery(function ($) {
             success: function (data) {
                 if (data['success'] === true) {
                     toggleForm(groupId, false);
+                    if (data['result'] == null && data['typeForm'] == 'browse') {
+                        var element = jQuery('#browse-value-'+groupId);
+                        element.html('');
+                    }
                     container.find('span.badge-success').show().delay(2000).fadeOut();
                 } else {
                     var error = data['error'];
@@ -101,18 +107,13 @@ jQuery(function ($) {
             type: "POST",
             data: data,
             success: function (data) {
-                console.log('update');
+                var element = jQuery('#browse-value-'+input_id);
                 if (data['success'] === true) {
                     if (name.length > 0) {
-                        console.log(input_id);
-                        var element = jQuery('#browse-value-'+input_id);
-                        console.log(element);
                         element.html('<a href="'+data.result.url+'" target="_blank">'+data.result.name+'</a>');
-                        //element.siblings('.btn-remove').removeClass('hide');
                     }
                 } else {
                     var error = data['error'];
-                    jQuery('span[class*="' + identifier_replace + '"]').siblings('.error-message ').children('span').html(error);
                 }
             }
         });
@@ -123,15 +124,18 @@ jQuery(function ($) {
         event.preventDefault();
 
         var data = {};
-        data['siteaccess'] = event.srcElement.getAttribute("data-site");
-        data['schema_name'] = event.srcElement.getAttribute("data-schema-name");
-        data['path_update'] = event.srcElement.getAttribute("data-path");
-        data['type_element'] = event.srcElement.getAttribute("data-type");
-        data['replace_value_id'] = event.srcElement.getAttribute("data-replace-value-id");
-        data['input_id'] = event.srcElement.getAttribute("data-input-id");
+
+        var source = event.srcElement.parentNode;
+
+        data['siteaccess'] = source.getAttribute("data-site");
+        data['schema_name'] = source.getAttribute("data-schema-name");
+        data['path_update'] = source.getAttribute("data-path");
+        data['type_element'] = source.getAttribute("data-type");
+        data['replace_value_id'] = source.getAttribute("data-replace-value-id");
+        data['input_id'] = source.getAttribute("data-input-id");
 
         var config = JSON.parse(udwContainer.getAttribute('data-filter-subtree-udw-config'));
-        var startingLocationId = event.srcElement.getAttribute("data-start-location-id");
+        var startingLocationId = source.getAttribute("data-start-location-id");
         if (typeof startingLocationId !== 'undefined') {
             config.startingLocationId = parseInt(startingLocationId);
         }
